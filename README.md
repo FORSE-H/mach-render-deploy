@@ -35,3 +35,5 @@ Connect an MCP client (Claude Desktop, Cursor):
 The DB is a baked snapshot. To update it: rebuild locally
 (`uv run python ingest.py --db data/mach.duckdb` with a GITHUB_TOKEN), copy the
 new `data/mach.duckdb` here, commit, and push — Render redeploys.
+
+<!-- private-repo deploy test 20261108 -->
