@@ -50,6 +50,29 @@ def create_mcp(store: EntryStore, embedder: QueryEmbedder | None = None) -> Fast
         hits = catalog.search(store, embedder, query, limit=limit, category=category)
         return [h.model_dump() for h in hits]
 
+    @mcp.tool
+    def explain_scoring(identifier: str) -> dict | None:
+        """Explain how an entry's Adopt/Assess/Caution judgement was derived:
+        the ring, score, and each rule that fired with its points and rationale.
+        The judgement is deterministic from harvested signals, not prose. Returns
+        null if no such entry; scored=false for editorial entries with no signals."""
+        from core.scoring import score_entry
+
+        entry = catalog.get_entry(store, identifier)
+        if entry is None:
+            return None
+        j = score_entry(entry)
+        return {
+            "identifier": identifier,
+            "ring": j.ring,
+            "score": j.score,
+            "scored": j.scored,
+            "reason": j.reason,
+            "rules_fired": [
+                {"signal": h.signal, "detail": h.detail, "points": h.points} for h in j.hits
+            ],
+        }
+
     return mcp
 
 

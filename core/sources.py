@@ -45,6 +45,13 @@ SOURCES: tuple[MetadataSource, ...] = (
         attribution_required=False,
     ),
     MetadataSource(
+        source_id="mach_scorer",
+        name="MACH deterministic scorer",
+        data_licence="CC-BY-4.0",
+        attribution_required=False,
+        attribution_text="Algorithmic judgement from verified signals (MACH scorer).",
+    ),
+    MetadataSource(
         source_id="curator",
         name="MACH editorial",
         data_licence="CC-BY-4.0",
