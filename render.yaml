@@ -1,0 +1,13 @@
+# Render blueprint — one combined service serving MACH's REST API + MCP.
+# The catalogue (data/mach.duckdb) is baked into the image, so the service
+# wakes and serves without a boot-time harvest.
+services:
+  - type: web
+    name: mach-catalog
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /livez
+    envVars:
+      - key: PORT
+        value: "10000"
