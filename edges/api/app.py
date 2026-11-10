@@ -15,10 +15,22 @@ import os
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from core import catalog
 from core.catalog import EntryStore, QueryEmbedder
+
+# Browser clients (the website's semantic search) need CORS. The API is public
+# and read-only, so allowing the site origins plus localhost for dev is safe.
+# MACH_CORS_ORIGINS (comma-separated) overrides; "*" allows any origin.
+_DEFAULT_ORIGINS = [
+    "https://machcatalog.org",
+    "https://www.machcatalog.org",
+    "https://forse-h.github.io",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
 
 
 class SearchRequest(BaseModel):
@@ -34,6 +46,15 @@ def create_app(
     lifespan=None,
 ) -> FastAPI:
     app = FastAPI(title="MACH catalog API", version="0.1.0", lifespan=lifespan)
+
+    env = os.environ.get("MACH_CORS_ORIGINS")
+    origins = ["*"] if env == "*" else (env.split(",") if env else _DEFAULT_ORIGINS)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_methods=["GET", "POST"],
+        allow_headers=["*"],
+    )
 
     @app.get("/livez")
     def livez() -> dict[str, str]:
