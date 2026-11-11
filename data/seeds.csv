@@ -1,0 +1,214 @@
+identifier,name,url,code_repository,category
+brainx-data-archive,BrainX Community Data Archive,https://brainxai.org/data/,,catalogs
+health-ri-data-catalogue,Health-RI Data Catalogue,https://catalogus.healthdata.nl/en,,catalogs
+sphn-metadata-catalog,SPHN Metadata Catalog,https://fdp.dcc.sib.swiss/,,catalogs
+bio-tools,bio.tools,https://bio.tools/,,data-sources
+bioportal,NCBO BioPortal,https://bioportal.bioontology.org/,,data-sources
+chembl,ChEMBL,https://www.ebi.ac.uk/chembl/,,data-sources
+clinicaltrials,ClinicalTrials.gov,https://clinicaltrials.gov/,https://clinicaltrials.gov/data-api/api,data-sources
+clinvar,ClinVar,https://www.ncbi.nlm.nih.gov/clinvar/,https://www.ncbi.nlm.nih.gov/clinvar/docs/api_http/,data-sources
+cms-coverage,CMS Medicare Coverage Database,https://www.cms.gov/medicare-coverage-database/,,data-sources
+ema-medicines,EMA Medicines Data,https://www.ema.europa.eu/en/medicines/download-medicine-data,,data-sources
+healthmap,HealthMap,https://healthmap.org/,,data-sources
+icd11-api,ICD-11 API,https://icd.who.int/icdapi,,data-sources
+open-targets,Open Targets Platform,https://platform.opentargets.org,,data-sources
+openalex,OpenAlex,https://openalex.org,https://github.com/ourresearch/openalex-api-tutorials,data-sources
+opendata-nhs-scotland,Scottish Health and Social Care Open Data,https://www.opendata.nhs.scot/,,data-sources
+openfda,openFDA,https://open.fda.gov/,,data-sources
+paho-opendata,PAHO Open Data Portal,https://opendata.paho.org/,,data-sources
+physionet,PhysioNet,https://physionet.org/,https://github.com/MIT-LCP/physionet-build,data-sources
+promed,ProMED,https://promedmail.org/,,data-sources
+pubmed,PubMed,https://pubmed.ncbi.nlm.nih.gov/,,data-sources
+synapse,Synapse,https://www.synapse.org,https://github.com/Sage-Bionetworks/Synapse-Repository-Services,data-sources
+tcia,The Cancer Imaging Archive,https://www.cancerimagingarchive.net/,https://www.cancerimagingarchive.net/access-data/,data-sources
+vivli,Vivli,https://vivli.org,,data-sources
+who-don,WHO Disease Outbreak News,https://www.who.int/emergencies/disease-outbreak-news,,data-sources
+agentclinic,AgentClinic,https://agentclinic.github.io/,https://github.com/SamuelSchmidgall/AgentClinic,datasets
+amsterdamumc-db,AmsterdamUMCdb,https://amsterdammedicaldatascience.nl,https://github.com/AmsterdamUMC/AmsterdamUMCdb,datasets
+camelyon,CAMELYON,https://camelyon17.grand-challenge.org/,,datasets
+chi-bench,Chi-Bench,https://github.com/actava-ai/chi-bench,https://github.com/actava-ai/chi-bench,datasets
+ehrshot,EHRSHOT,https://som-shahlab.github.io/ehrshot-website/,https://github.com/som-shahlab/ehrshot-benchmark,datasets
+eicu,eICU Collaborative Research Database,https://physionet.org/content/eicu-crd/,,datasets
+fhir-agentbench,FHIR-AgentBench,https://arxiv.org/abs/2509.19319,https://github.com/glee4810/FHIR-AgentBench,datasets
+healthbench,HealthBench,https://openai.com/index/healthbench/,https://github.com/openai/simple-evals,datasets
+medagentbench,MedAgentBench,https://ai.nejm.org/doi/full/10.1056/AIdbp2500144,https://github.com/stanfordmlgroup/MedAgentBench,datasets
+medalign,MedAlign,https://github.com/som-shahlab/medalign,https://github.com/som-shahlab/medalign,datasets
+medcalc-bench,MedCalc-Bench,https://arxiv.org/abs/2406.12036,https://github.com/ncbi-nlp/MedCalc-Bench,datasets
+medhelm,MedHELM,https://medhelm.org/,https://github.com/stanford-crfm/helm,datasets
+medvidbench,MedVidBench,https://huggingface.co/datasets/UII-AI/MedVidBench,,datasets
+metabonet,MetaboNet,https://metabo-net.org/,https://github.com/replicahealth/metabonet_processor,datasets
+mimic-iv,MIMIC-IV,https://physionet.org/content/mimiciv/,,datasets
+mlomics-cancer-benchmark,MLOmics Cancer Multi-Omics Benchmark,https://chenzrg.github.io/project/mlomics,https://github.com/chenzRG/Cancer-Multi-Omics-Benchmark,datasets
+monuseg,MoNuSeg,https://monuseg.grand-challenge.org/,,datasets
+nci-idc,NCI Imaging Data Commons,https://portal.imaging.datacommons.cancer.gov/,https://github.com/ImagingDataCommons/idc-index,datasets
+nct-crc-he-100k,NCT-CRC-HE-100K,https://zenodo.org/record/1214456,,datasets
+nhs-synthetic-clinical-notes,NHS England Synthetic Clinical Notes,https://huggingface.co/datasets/NHSEDataScience/synthetic_clinical_notes,,datasets
+panda,PANDA,https://panda.grand-challenge.org/,,datasets
+pannuke,PanNuke,https://warwick.ac.uk/fac/cross_fac/tia/data/pannuke,,datasets
+patchcamelyon,PatchCamelyon,https://github.com/basveeling/pcam,https://github.com/basveeling/pcam,datasets
+physionet-sepsis-2019,PhysioNet Sepsis Challenge 2019,https://physionet.org/content/challenge-2019/1.0.0/,,datasets
+ptb-xl,PTB-XL,https://physionet.org/content/ptb-xl/,,datasets
+tcga,The Cancer Genome Atlas,https://portal.gdc.cancer.gov/,https://github.com/NCI-GDC/gdc-client,datasets
+tuh-eeg,TUH EEG Corpus,https://isip.piconepress.com/projects/nedc/html/tuh_eeg/,,datasets
+fhir-mcp-wso2,FHIR MCP Server (WSO2),https://github.com/wso2/fhir-mcp-server,https://github.com/wso2/fhir-mcp-server,mcp-servers
+omcp,OMCP,https://fastomop.github.io/omcp/,https://github.com/fastomop/omcp,mcp-servers
+openehr-mcp-cadasto,openEHR Assistant MCP (Cadasto),https://github.com/Cadasto/openehr-assistant-mcp,https://github.com/Cadasto/openehr-assistant-mcp,mcp-servers
+openehr-mcp-deak,openEHR MCP Server (deak-ai),https://github.com/deak-ai/openehr-mcp-server,https://github.com/deak-ai/openehr-mcp-server,mcp-servers
+snomed-ct-mcp,MCP SNOMED CT,https://github.com/eigenbau/mcp-snomed-ct,https://github.com/eigenbau/mcp-snomed-ct,mcp-servers
+tooluniverse,ToolUniverse,https://zitniklab.hms.harvard.edu/TxAgent/,https://github.com/mims-harvard/ToolUniverse,mcp-servers
+bioreason,BioReason,https://github.com/bowang-lab/BioReason,https://github.com/bowang-lab/BioReason,ai-ml-models
+cellvit,CellViT,https://github.com/TIO-IKIM/CellViT,https://github.com/TIO-IKIM/CellViT,ai-ml-models
+conch,CONCH,https://huggingface.co/MahmoodLab/CONCH,https://github.com/mahmoodlab/CONCH,ai-ml-models
+ecg-fm,ECG-FM,https://github.com/bowang-lab/ecg-fm,https://github.com/bowang-lab/ecg-fm,ai-ml-models
+ecgfounder,ECGFounder,https://github.com/NickLJLee/ECGFounder,https://github.com/NickLJLee/ECGFounder,models
+echojep,EchoJEPA,https://github.com/bowang-lab/EchoJEPA,https://github.com/bowang-lab/EchoJEPA,ai-ml-models
+esm2,ESM-2,https://github.com/facebookresearch/esm,https://github.com/facebookresearch/esm,models
+esmc,ESMC,https://github.com/evolutionaryscale/esm,https://github.com/evolutionaryscale/esm,ai-ml-models
+geneagent,GeneAgent,https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/GeneAgent/,https://github.com/ncbi-nlp/GeneAgent,ai-ml-models
+h-optimus-0,H-optimus-0,https://huggingface.co/bioptimus/H-optimus-0,,ai-ml-models
+hooknet,HookNet,https://github.com/DIAGNijmegen/pathology-hooknet,https://github.com/DIAGNijmegen/pathology-hooknet,ai-ml-models
+hover-net,HoVer-Net,https://github.com/vqdang/hover_net,https://github.com/vqdang/hover_net,ai-ml-models
+medgemma,MedGemma,https://developers.google.com/health-ai-developer-foundations/medgemma,https://github.com/google-health/medgemma,ai-ml-models
+medsam,MedSAM,https://github.com/bowang-lab/MedSAM,https://github.com/bowang-lab/MedSAM,ai-ml-models
+medsam2,MedSAM2,https://github.com/bowang-lab/MedSAM2,https://github.com/bowang-lab/MedSAM2,ai-ml-models
+nndetection,nnDetection,https://github.com/MIC-DKFZ/nnDetection,https://github.com/MIC-DKFZ/nnDetection,ai-ml-models
+nnunet,nnU-Net,https://github.com/MIC-DKFZ/nnUNet,https://github.com/MIC-DKFZ/nnUNet,ai-ml-models
+openmed,OpenMed,https://openmed.life/,https://github.com/maziyarpanahi/openmed,ai-ml-models
+openTSLM,OpenTSLM,https://github.com/StanfordBDHG/OpenTSLM,https://github.com/StanfordBDHG/OpenTSLM,ai-ml-models
+plip,PLIP,https://huggingface.co/vinid/plip,https://github.com/PathologyFoundation/plip,ai-ml-models
+prov-gigapath,Prov-GigaPath,https://huggingface.co/prov-gigapath/prov-gigapath,https://github.com/prov-gigapath/prov-gigapath,ai-ml-models
+scgpt,scGPT,https://github.com/bowang-lab/scGPT,https://github.com/bowang-lab/scGPT,ai-ml-models
+totalsegmentator,TotalSegmentator,https://totalsegmentator.com/,https://github.com/wasserth/TotalSegmentator,ai-ml-models
+tractseg,TractSeg,https://github.com/MIC-DKFZ/TractSeg,https://github.com/MIC-DKFZ/TractSeg,ai-ml-models
+txagent,TxAgent,https://zitniklab.hms.harvard.edu/TxAgent,https://github.com/mims-harvard/TxAgent,ai-ml-models
+uai-nexus-medvlm-medgrpo,uAI-NEXUS-MedVLM (MedGRPO),https://huggingface.co/UII-AI/uAI-NEXUS-MedVLM-1.0a-7B-RL,https://github.com/UII-AI/MedGRPO-Code,ai-ml-models
+uni,UNI,https://huggingface.co/MahmoodLab/UNI,https://github.com/mahmoodlab/UNI,ai-ml-models
+uni2-h,UNI2-h,https://huggingface.co/MahmoodLab/UNI2-h,https://github.com/mahmoodlab/uni,ai-ml-models
+virchow,Virchow,https://huggingface.co/paige-ai/Virchow,https://github.com/Paige-AI/paige-ml-sdk,ai-ml-models
+virchow2,Virchow2,https://huggingface.co/paige-ai/Virchow2,https://github.com/Paige-AI/paige-ml-sdk,ai-ml-models
+3d-slicer,3D Slicer,https://www.slicer.org,https://github.com/Slicer/Slicer,software
+android-fhir-sdk,Android FHIR SDK,https://developers.google.com/open-health-stack,https://github.com/google/android-fhir,software
+androidaps,AndroidAPS,https://github.com/nightscout/AndroidAPS,https://github.com/nightscout/AndroidAPS,software
+batchgenerators,batchgenerators,https://github.com/MIC-DKFZ/batchgenerators,https://github.com/MIC-DKFZ/batchgenerators,software
+bbmri-negotiator,BBMRI-ERIC Negotiator,https://bbmri-eric.github.io/negotiator/,https://github.com/BBMRI-ERIC/negotiator,software
+bioformats,Bio-Formats,https://www.openmicroscopy.org/bio-formats/,https://github.com/ome/bioformats,software
+biomni,Biomni,https://biomni.stanford.edu/,https://github.com/snap-stanford/biomni,software
+blaze,Blaze,https://github.com/samply/blaze,https://github.com/samply/blaze,software
+care,CARE,https://ohc.network,https://github.com/ohcnetwork/care,software
+cellprofiler,CellProfiler,https://cellprofiler.org/,https://github.com/CellProfiler/CellProfiler,software
+cornerstone3d,Cornerstone3D,https://www.cornerstonejs.org,https://github.com/cornerstonejs/cornerstone3D,software
+ctakes,Apache cTAKES,https://ctakes.apache.org/,https://github.com/apache/ctakes,software
+datashield,DataSHIELD,https://www.datashield.org,https://github.com/datashield/dsBase,software
+dcm2niix,dcm2niix,https://github.com/rordenlab/dcm2niix,https://github.com/rordenlab/dcm2niix,software
+dcm4che,dcm4che,http://web.dcm4che.org/,https://github.com/dcm4che/dcm4che,software
+dcmtk,DCMTK,https://dicom.offis.de/dcmtk,https://github.com/DCMTK/dcmtk,software
+deepvariant,DeepVariant,https://github.com/google/deepvariant,https://github.com/google/deepvariant,software
+dhis2,DHIS2,https://dhis2.org/,https://github.com/dhis2/dhis2-core,software
+digital-slide-archive,Digital Slide Archive,https://digitalslidearchive.github.io/digital_slide_archive/,https://github.com/DigitalSlideArchive/digital_slide_archive,software
+direct,DIRECT,https://docs.aiforoncology.nl/direct/,https://github.com/NKI-AI/direct,software
+discharge-documentation-generator,Discharge Documentation Generator,https://github.com/UMCU-Digital-Health/discharge-documentation-generator,https://github.com/UMCU-Digital-Health/discharge-documentation-generator,software
+drug-ner,Drug Named Entity Recognition,https://fastdatascience.com/drug-named-entity-recognition-python-library/,https://github.com/fastdatascience/drug_named_entity_recognition,software
+ehrbase,EHRbase,https://ehrbase.org/,https://github.com/ehrbase/ehrbase,software
+eva,eva,https://github.com/kaiko-ai/eva,https://github.com/kaiko-ai/eva,software
+fastslide,FastSlide,https://github.com/NKI-AI/fastslide,https://github.com/NKI-AI/fastslide,software
+fastsurfer,FastSurfer,https://github.com/Deep-MI/FastSurfer,https://github.com/Deep-MI/FastSurfer,software
+femr,FEMR,https://github.com/som-shahlab/femr,https://github.com/som-shahlab/femr,software
+fiji,Fiji,https://fiji.sc/,https://github.com/fiji/fiji,software
+fmriprep,fMRIPrep,https://fmriprep.org,https://github.com/nipreps/fmriprep,software
+gatk,GATK,https://gatk.broadinstitute.org/,https://github.com/broadinstitute/gatk,software
+gnuhealth,GNU Health,https://www.gnuhealth.org/,https://codeberg.org/gnuhealth/his,software
+grand-challenge,Grand Challenge,https://grand-challenge.org/,https://github.com/comic/grand-challenge.org,software
+hapi-fhir,HAPI FHIR,https://hapifhir.io/,https://github.com/hapifhir/hapi-fhir,software
+heudiconv,HeuDiConv,https://heudiconv.readthedocs.io,https://github.com/nipy/heudiconv,software
+hf-ehr,hf_ehr,https://github.com/som-shahlab/hf_ehr,https://github.com/som-shahlab/hf_ehr,software
+highdicom,highdicom,https://highdicom.readthedocs.io,https://github.com/ImagingDataCommons/highdicom,software
+histolab,histolab,https://histolab.readthedocs.io/,https://github.com/histolab/histolab,software
+histomicstk,HistomicsTK,https://digitalslidearchive.github.io/HistomicsTK/,https://github.com/DigitalSlideArchive/HistomicsTK,software
+ilastik,ilastik,https://www.ilastik.org/,https://github.com/ilastik/ilastik,software
+invesalius,InVesalius,https://invesalius.github.io/,https://github.com/invesalius/invesalius3,software
+itk,ITK,https://itk.org/,https://github.com/InsightSoftwareConsortium/ITK,software
+itksnap,ITK-SNAP,http://www.itksnap.org/,https://github.com/pyushkevich/itksnap,software
+kaapana,Kaapana,https://kaapana.ai,https://github.com/kaapana/kaapana,software
+medcat,MedCAT,https://medcat.readthedocs.io/,https://github.com/CogStack/MedCAT,software
+medplum,Medplum,https://medplum.com/,https://github.com/medplum/medplum,software
+medrax,MedRAX,https://github.com/bowang-lab/MedRAX,https://github.com/bowang-lab/MedRAX,software
+medrax2,MedRAX2,https://github.com/bowang-lab/MedRAX2,https://github.com/bowang-lab/MedRAX2,software
+microsoft-fhir-server,Microsoft FHIR Server,https://github.com/microsoft/fhir-server,https://github.com/microsoft/fhir-server,software
+mirp,MIRP,https://github.com/oncoray/mirp,https://github.com/oncoray/mirp,software
+mirth-connect,Mirth Connect,https://www.nextgen.com/solutions/interoperability/mirth-integration-engine/mirth-connect-downloads,https://github.com/nextgenhealthcare/connect,software
+mitk,MITK,https://www.mitk.org,https://github.com/MITK/MITK,software
+molgenis-emx2,MOLGENIS EMX2,https://molgenis.github.io/molgenis-emx2/,https://github.com/molgenis/molgenis-emx2,software
+monai-deploy,MONAI Deploy,https://monai.io/deploy.html,https://github.com/Project-MONAI/monai-deploy,software
+monai-label,MONAI Label,https://github.com/Project-MONAI/MONAILabel,https://github.com/Project-MONAI/MONAILabel,software
+monai-model-zoo,MONAI Model Zoo,https://monai.io/model-zoo.html,https://github.com/Project-MONAI/model-zoo,software
+monai,MONAI,https://monai.io/,https://github.com/Project-MONAI/MONAI,software
+mriqc,MRIQC,https://mriqc.readthedocs.io/,https://github.com/nipreps/mriqc,software
+napari,napari,https://napari.org,https://github.com/napari/napari,software
+neurokit2,NeuroKit2,https://neuropsychology.github.io/NeuroKit/,https://github.com/neuropsychology/NeuroKit,software
+nibabies,NiBabies,https://nibabies.readthedocs.io/,https://github.com/nipreps/nibabies,software
+nightscout,Nightscout,https://nightscout.github.io/,https://github.com/nightscout/cgm-remote-monitor,software
+niivue,NiiVue,https://niivue.github.io/niivue/,https://github.com/niivue/niivue,software
+nlmixr2,nlmixr2,https://nlmixr2.org/,https://github.com/nlmixr2/nlmixr2,software
+no-show,No-Show Prediction,https://github.com/UMCU-Digital-Health/No_Show,https://github.com/UMCU-Digital-Health/No_Show,software
+ohif-viewers,OHIF Viewers,https://ohif.org,https://github.com/OHIF/Viewers,software
+omero,OMERO,https://www.openmicroscopy.org/omero/,https://github.com/ome/openmicroscopy,software
+opal,Opal,https://www.obiba.org/pages/products/opal/,https://github.com/obiba/opal,software
+open-ecg-digitizer,Open-ECG-Digitizer,https://github.com/Ahus-AIM/Open-ECG-Digitizer,https://github.com/Ahus-AIM/Open-ECG-Digitizer,software
+openaps,OpenAPS,https://openaps.org/,https://github.com/openaps/oref0,software
+openemr,OpenEMR,https://open-emr.org/,https://github.com/openemr/openemr,software
+openmrs,OpenMRS,https://openmrs.org,https://github.com/openmrs/openmrs-core,software
+openscribe,OpenScribe,https://github.com/sammargolis/OpenScribe,https://github.com/sammargolis/OpenScribe,software
+openslide,OpenSlide,https://openslide.org/,https://github.com/openslide/openslide,software
+orthanc,Orthanc,https://www.orthanc-server.com/,https://github.com/jodogne/OrthancMirror,software
+oscar-emr,OSCAR McMaster,https://fammed.mcmaster.ca/oscar-emr,https://bitbucket.org/oscaremr/oscar,software
+ozone-his,Ozone HIS,https://www.ozone-his.com/,https://github.com/ozone-his/ozone,software
+pathml,PathML,https://pathml.readthedocs.io/,https://github.com/Dana-Farber-AIOS/pathml,software
+pydicom,pydicom,https://pydicom.github.io/,https://github.com/pydicom/pydicom,software
+pyhealth,PyHealth,https://pyhealth.dev,https://github.com/sunlabuiuc/PyHealth,software
+qupath,QuPath,https://qupath.github.io/,https://github.com/qupath/qupath,software
+rdkit,RDKit,https://www.rdkit.org/,https://github.com/rdkit/rdkit,software
+simvascular,SimVascular,https://simvascular.github.io/,https://github.com/SimVascular/SimVascular,software
+slicerigt,SlicerIGT,https://www.slicerigt.org/wp/,https://github.com/SlicerIGT/SlicerIGT,software
+slideflow,Slideflow,https://slideflow.dev/,https://github.com/slideflow/slideflow,software
+smriprep,sMRIPrep,https://nipreps.org/smriprep/,https://github.com/nipreps/smriprep,software
+spark-fhir,Spark FHIR Server,https://github.com/FirelyTeam/spark,https://github.com/FirelyTeam/spark,software
+spezi,Spezi,https://github.com/StanfordSpezi/Spezi,https://github.com/StanfordSpezi/Spezi,software
+stardist,StarDist,https://stardist.net/,https://github.com/stardist/stardist,software
+stir,STIR,http://stir.sourceforge.net/,https://github.com/UCL/STIR,software
+suyashkumar-dicom,dicom (suyashkumar),https://github.com/suyashkumar/dicom,https://github.com/suyashkumar/dicom,software
+synthcity,SynthCity,https://github.com/vanderschaarlab/synthcity,https://github.com/vanderschaarlab/synthcity,software
+talk2biomodels,Talk2Biomodels,https://virtualpatientengine.github.io/AIAgents4Pharma/,https://github.com/VirtualPatientEngine/AIAgents4Pharma,software
+tiatoolbox,TIA Toolbox,https://tia-toolbox.readthedocs.io/,https://github.com/TissueImageAnalytics/tiatoolbox,software
+tidepool,Tidepool,https://www.tidepool.org/,https://github.com/tidepool-org/platform,software
+torchio,TorchIO,https://torchio.org/,https://github.com/fepegar/torchio,software
+trialgpt,TrialGPT,https://www.ncbi.nlm.nih.gov/research/trialgpt/,https://github.com/ncbi-nlp/TrialGPT,software
+trident,TRIDENT,https://github.com/mahmoodlab/TRIDENT,https://github.com/mahmoodlab/TRIDENT,software
+vantage6,vantage6,https://vantage6.ai,https://github.com/vantage6/vantage6,software
+veil,Veil,https://www.mayadataprivacy.com/,https://github.com/MAYA-DATA-PRIVACY/Veil,software
+vista,VistA,https://worldvista.org/,https://github.com/WorldVistA/VistA,software
+volview,VolView,https://volview.kitware.app/,https://github.com/Kitware/VolView,software
+weasis,Weasis,https://nroduit.github.io/en/,https://github.com/nroduit/Weasis,software
+wfdb-python,WFDB Python,https://wfdb.io,https://github.com/MIT-LCP/wfdb-python,software
+wholeslidedata,WholeSlideData,https://github.com/DIAGNijmegen/pathology-whole-slide-data,https://github.com/DIAGNijmegen/pathology-whole-slide-data,software
+xnat,XNAT,https://www.xnat.org,https://github.com/NrgXnat/xnat,software
+cdisc-adam,CDISC ADaM,https://www.cdisc.org/standards/foundational/adam,,specs
+cdisc-sdtm,CDISC SDTM,https://www.cdisc.org/standards/foundational/sdtm,,specs
+dicom,DICOM,https://www.dicomstandard.org,,specs
+fair-data-point,FAIR Data Point (FDP) Specification,https://fairdatapoint.readthedocs.io/,https://github.com/FAIRDataTeam/FAIRDataPoint,specs
+fhir-r4,HL7 FHIR R4,https://hl7.org/fhir/R4/,,specs
+healthdcat-ap,HealthDCAT-AP,https://healthdataeu.pages.code.europa.eu/healthdcat-ap/releases/release-5/,https://code.europa.eu/healthdataeu/healthdcat-ap,specs
+hito,HITO,https://hitontology.eu/,https://github.com/hitontology/ontology,specs
+ips,International Patient Summary,https://hl7.org/fhir/uv/ips/,https://github.com/HL7/fhir-ips,specs
+iso-13485,ISO 13485:2016,https://www.iso.org/standard/59752.html,,specs
+iso-14971,ISO 14971:2019,https://www.iso.org/standard/72704.html,,specs
+iso-15189,ISO 15189:2022,https://www.iso.org/standard/76677.html,,specs
+odrl,ODRL,https://www.w3.org/TR/odrl-model/,,specs
+open-nursing-core-ig,Open Nursing Core Implementation Guide,https://opennursingcoreig.com/,https://opensource.unicc.org/nursecitizendeveloper/open-nursing-core-ig,specs
+openehr,openEHR,https://specifications.openehr.org/,https://github.com/openEHR/specifications-RM,specs
+folklore-mcp,Folklore Clinical Variant Interpretation MCP,https://folklore.helena.bio,https://github.com/helena-bioinformatics/folklore-mcp,ai-tooling
+neuro-jepa,Neuro-JEPA,https://huggingface.co/NYUMedML/Neuro-JEPA,https://github.com/NYUMedML/Neuro-JEPA,ai-ml-models
+neuro-jepa-code,Neuro-JEPA (code),https://github.com/NYUMedML/Neuro-JEPA,https://github.com/NYUMedML/Neuro-JEPA,software
+noodle-mcp,Noodle Biomedical Literature Discovery MCP,https://noodle.helena.bio,https://github.com/helena-bioinformatics/noodle-mcp,ai-tooling
+omophub-mcp,OMOPHub MCP Server,https://github.com/OMOPHub/omophub-mcp,https://github.com/OMOPHub/omophub-mcp,ai-tooling
+openonco,OpenOnco,https://openonco.info,https://github.com/romeo111/OpenOnco,software
+sciagent-skills,SciAgent-Skills,https://github.com/jaechang-hits/SciAgent-Skills,https://github.com/jaechang-hits/SciAgent-Skills,ai-tooling
