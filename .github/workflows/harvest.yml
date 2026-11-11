@@ -1,0 +1,53 @@
+name: Harvest signals
+
+# Re-harvests every seed's repo signals (stars, forks, last commit, licence),
+# re-scores each entry deterministically, and commits data/signals.json so the
+# public MACH site can bake those signals in at build time. Runs on a schedule
+# and on demand. Uses the built-in GITHUB_TOKEN (5000 req/hr) for GitHub reads.
+on:
+  schedule:
+    - cron: '0 5 * * 1'   # Mondays 05:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: harvest
+  cancel-in-progress: false
+
+jobs:
+  harvest:
+    name: Harvest and export signals
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: '0.5.11'
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --frozen --no-dev
+
+      - name: Harvest signals into a fresh DuckDB
+        # --no-embed: the served DB keeps its embeddings; signals export needs none.
+        run: uv run python ingest.py --seeds data/seeds.csv --db data/mach.duckdb --no-embed
+
+      - name: Export signals.json
+        run: uv run python scripts/export_signals.py --db data/mach.duckdb --out data/signals.json
+
+      - name: Commit signals.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/signals.json
+          git diff --staged --quiet || git commit -m "chore: refresh harvested signals [skip ci]"
+          git push
