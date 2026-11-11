@@ -9,8 +9,11 @@ continues. HTTP transport is injected so tests run without the network.
 
 from __future__ import annotations
 
+import base64
+import binascii
 import json
 import re
+from dataclasses import replace
 from datetime import datetime, timezone
 from typing import Any, Protocol
 
@@ -18,6 +21,45 @@ from core.facts import HarvestedField
 
 _GITHUB_HOST_RE = re.compile(r"github\.com[/:]+([^/]+)/([^/#?]+?)(?:\.git)?/?$", re.IGNORECASE)
 _API_BASE = "https://api.github.com"
+
+# Values GitHub returns when it cannot name the licence — treat as "detect it ourselves".
+_NO_SPDX = {None, "", "NOASSERTION", "NONE"}
+
+# Signature phrases that identify a licence from its text, when GitHub's licensee
+# detector declines (usually because the file carries a custom addendum). Ordered
+# most-specific first; the first match wins. Kept deliberately small and legible.
+_LICENSE_SIGNATURES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("Apache-2.0", ("Apache License", "Version 2.0")),
+    ("GPL-3.0", ("GNU GENERAL PUBLIC LICENSE", "Version 3")),
+    ("GPL-2.0", ("GNU GENERAL PUBLIC LICENSE", "Version 2")),
+    ("AGPL-3.0", ("GNU AFFERO GENERAL PUBLIC LICENSE", "Version 3")),
+    ("LGPL-3.0", ("GNU LESSER GENERAL PUBLIC LICENSE", "Version 3")),
+    ("MPL-2.0", ("Mozilla Public License", "Version 2.0")),
+    ("BSD-3-Clause", ("Redistributions of source code", "Neither the name")),
+    ("BSD-2-Clause", ("Redistributions of source code", "Redistributions in binary form")),
+    ("MIT", ("Permission is hereby granted, free of charge",)),
+    ("ISC", ("Permission to use, copy, modify, and/or distribute",)),
+    ("Unlicense", ("This is free and unencumbered software released into the public domain",)),
+    ("CC0-1.0", ("CC0 1.0 Universal",)),
+    ("CC-BY-4.0", ("Creative Commons Attribution 4.0",)),
+)
+
+
+def detect_spdx_from_text(text: str) -> str | None:
+    """Best-effort SPDX id from licence file text, or None. Case-insensitive and
+    whitespace-tolerant so a reformatted or addended file still matches."""
+    if not text:
+        return None
+    norm = " ".join(text.split()).lower()
+    for spdx, needles in _LICENSE_SIGNATURES:
+        if all(n.lower() in norm for n in needles):
+            return spdx
+    return None
+
+
+def _replace_license(field: HarvestedField, spdx: str) -> HarvestedField:
+    """Return the licence field with a detected SPDX id, noting the fallback source."""
+    return replace(field, value=spdx, source_id="github_api+license_text")
 
 
 class HttpClient(Protocol):
@@ -57,7 +99,50 @@ class GitHubClient:
         if payload is None:
             return []
 
-        return self._fields_from_payload(payload)
+        fields = self._fields_from_payload(payload)
+
+        # GitHub's own detector returns NOASSERTION when a LICENSE file carries a
+        # custom addendum (common for skill libraries that scope the grant). The
+        # file itself is still a standard licence, so when the API can't name it,
+        # fall back to detecting the SPDX id from the LICENSE text.
+        licence = payload.get("license") or {}
+        spdx = licence.get("spdx_id") if isinstance(licence, dict) else None
+        if spdx in _NO_SPDX:
+            detected = self._detect_license_from_file(owner, repo)
+            if detected:
+                fields = [
+                    f if f.field_name != "license"
+                    else _replace_license(f, detected)
+                    for f in fields
+                ]
+        return fields
+
+    def _detect_license_from_file(self, owner: str, repo: str) -> str | None:
+        """Fetch the LICENSE file and match its text to a known SPDX id.
+        Returns None if the file is missing or unrecognised."""
+        headers = {"Accept": "application/vnd.github+json"}
+        if self._token:
+            headers["Authorization"] = f"Bearer {self._token}"
+        try:
+            resp = self._http.get(
+                f"{_API_BASE}/repos/{owner}/{repo}/license", headers=headers, timeout=15.0
+            )
+        except Exception:
+            return None
+        if resp.status_code != 200:
+            return None
+        body = resp.json()
+        if not isinstance(body, dict):
+            return None
+        content = body.get("content") or ""
+        if body.get("encoding") == "base64" and content:
+            try:
+                text = base64.b64decode(content).decode("utf-8", "replace")
+            except (ValueError, binascii.Error):
+                return None
+        else:
+            text = content
+        return detect_spdx_from_text(text)
 
     def _get_repo(self, owner: str, repo: str) -> dict[str, Any] | None:
         headers = {"Accept": "application/vnd.github+json"}
