@@ -41,6 +41,14 @@ def create_mcp(store: EntryStore, embedder: QueryEmbedder | None = None) -> Fast
         return entry.model_dump() if entry is not None else None
 
     @mcp.tool
+    def get_history(identifier: str) -> list[dict]:
+        """How an entry's harvested values have changed over time (newest first):
+        each change records the field, its new and previous value, the source, and
+        when it changed. Lets you see content deviations (e.g. a licence changing,
+        a judgement flipping) with provenance. Empty if nothing has changed yet."""
+        return [c.model_dump() for c in catalog.get_history(store, identifier)]
+
+    @mcp.tool
     def search_catalog(query: str, limit: int = 5, category: str | None = None) -> list[dict]:
         """Semantic search over the catalog. Returns the top matches with a
         similarity score, optionally restricted to a category. Requires search

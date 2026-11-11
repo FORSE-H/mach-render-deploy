@@ -48,6 +48,14 @@ class SearchHit(BaseModel):
     score: float
 
 
+class ChangeEvent(BaseModel):
+    field_name: str
+    value: str | None
+    previous_value: str | None
+    source_id: str
+    changed_at: str
+
+
 class EntryStore(Protocol):
     """Read surface the catalog needs. DuckDbStore implements it."""
 
@@ -57,6 +65,12 @@ class EntryStore(Protocol):
 
     def facts_with_sources(self, identifier: str) -> list[tuple[str, str | None, str, str]]:
         """(field_name, value, source_id, fetch_status) for one entry."""
+        ...
+
+    def history_for(
+        self, identifier: str, field_name: str | None = None
+    ) -> list[tuple[str, str | None, str | None, str, object]]:
+        """(field_name, value, previous_value, source_id, changed_at), newest first."""
         ...
 
     def search_similar(
@@ -98,6 +112,21 @@ def get_entry(store: EntryStore, identifier: str) -> Entry | None:
         category=seed.category,
         facts=facts,
     )
+
+
+def get_history(store: EntryStore, identifier: str) -> list[ChangeEvent]:
+    """The change timeline for an entry: how its harvested values have changed
+    over time (newest first), each with its source. Empty if nothing recorded."""
+    return [
+        ChangeEvent(
+            field_name=field,
+            value=value,
+            previous_value=prev,
+            source_id=source,
+            changed_at=str(changed_at),
+        )
+        for field, value, prev, source, changed_at in store.history_for(identifier)
+    ]
 
 
 def search(

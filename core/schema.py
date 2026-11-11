@@ -85,6 +85,17 @@ SCHEMA_STATEMENTS: tuple[str, ...] = (
         embedder_model VARCHAR
     )
     """,
+    """
+    CREATE TABLE IF NOT EXISTS fact_history (
+        identifier     VARCHAR NOT NULL,
+        field_name     VARCHAR NOT NULL,
+        value          VARCHAR,          -- the new value at this change point
+        previous_value VARCHAR,          -- what it changed from (NULL = first seen)
+        source_id      VARCHAR NOT NULL, -- lineage: which source reported the new value
+        changed_at     TIMESTAMP NOT NULL,
+        PRIMARY KEY (identifier, field_name, changed_at)
+    )
+    """,
 )
 
 

@@ -130,6 +130,29 @@ class DuckDbStore:
         self._con.execute("BEGIN TRANSACTION")
         try:
             for f in fields:
+                # Append to history only when the value actually changed (or is new),
+                # capturing previous→new with its source and time.
+                prev = self._con.execute(
+                    "SELECT value FROM entry_facts WHERE identifier = ? AND field_name = ?",
+                    [identifier, f.field_name],
+                ).fetchone()
+                prev_value = prev[0] if prev is not None else None
+                if prev is None or prev_value != f.value:
+                    self._con.execute(
+                        """
+                        INSERT OR REPLACE INTO fact_history
+                            (identifier, field_name, value, previous_value, source_id, changed_at)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                        """,
+                        [
+                            identifier,
+                            f.field_name,
+                            f.value,
+                            prev_value,
+                            f.source_id,
+                            f.harvested_at,
+                        ],
+                    )
                 self._con.execute(
                     """
                     INSERT OR REPLACE INTO entry_facts
@@ -240,6 +263,26 @@ class DuckDbStore:
             """,
             [identifier],
         ).fetchall()
+
+    def history_for(
+        self, identifier: str, field_name: str | None = None
+    ) -> list[tuple[str, str | None, str | None, str, object]]:
+        """Change history for an entry: (field_name, value, previous_value,
+        source_id, changed_at) per recorded change, newest first. Optionally
+        restricted to one field."""
+        sql = """
+            SELECT field_name, value, previous_value, source_id, changed_at
+            FROM fact_history
+            WHERE identifier = ?
+            {field}
+            ORDER BY changed_at DESC, field_name
+        """
+        params: list = [identifier]
+        field_clause = ""
+        if field_name is not None:
+            field_clause = "AND field_name = ?"
+            params.append(field_name)
+        return self._con.execute(sql.format(field=field_clause), params).fetchall()
 
     # --- convenience reads (tests) -------------------------------------------
 

@@ -90,6 +90,14 @@ def create_app(
             raise HTTPException(status_code=404, detail=f"No entry: {identifier}")
         return entry
 
+    @app.get("/history/{identifier}")
+    def get_history(identifier: str) -> list[catalog.ChangeEvent]:
+        """How an entry's harvested values have changed over time, newest first.
+        Empty if the entry exists but nothing has changed since it was first seen."""
+        if catalog.get_entry(store, identifier) is None:
+            raise HTTPException(status_code=404, detail=f"No entry: {identifier}")
+        return catalog.get_history(store, identifier)
+
     @app.post("/search")
     def search(req: SearchRequest) -> list[catalog.SearchHit]:
         if embedder is None:
