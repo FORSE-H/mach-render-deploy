@@ -212,3 +212,6 @@ noodle-mcp,Noodle Biomedical Literature Discovery MCP,https://noodle.helena.bio,
 omophub-mcp,OMOPHub MCP Server,https://github.com/OMOPHub/omophub-mcp,https://github.com/OMOPHub/omophub-mcp,ai-tooling
 openonco,OpenOnco,https://openonco.info,https://github.com/romeo111/OpenOnco,software
 sciagent-skills,SciAgent-Skills,https://github.com/jaechang-hits/SciAgent-Skills,https://github.com/jaechang-hits/SciAgent-Skills,ai-tooling
+clawbio,ClawBio,https://github.com/ClawBio/ClawBio,https://github.com/ClawBio/ClawBio,ai-tooling
+openclaw-medical-skills,OpenClaw Medical Skills,https://github.com/FreedomIntelligence/OpenClaw-Medical-Skills,https://github.com/FreedomIntelligence/OpenClaw-Medical-Skills,ai-tooling
+marc-v1,MARC v1,https://github.com/Penn-RAIL/MARC-v1,https://github.com/Penn-RAIL/MARC-v1,ai-tooling
