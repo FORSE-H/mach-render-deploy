@@ -72,16 +72,32 @@ def export(store: DuckDbStore) -> dict:
         by_field = {f["field_name"]: f["value"] for f in facts}
 
         # Convenience signals (parsed once here so the site doesn't have to).
+        def _bool(name: str):
+            v = by_field.get(name)
+            return str(v).lower() == "true" if v is not None else None
+
         signals = {
             "repo_stars": _coerce_int(by_field.get("repo_stars")),
             "repo_forks": _coerce_int(by_field.get("repo_forks")),
             "repo_last_commit": by_field.get("repo_last_commit"),
-            "repo_archived": str(by_field.get("repo_archived")).lower() == "true"
-            if by_field.get("repo_archived") is not None
-            else None,
+            "repo_created": by_field.get("repo_created"),
+            "repo_archived": _bool("repo_archived"),
+            "repo_open_issues": _coerce_int(by_field.get("repo_open_issues")),
             "license": by_field.get("license"),
             "pypi_downloads": _coerce_int(by_field.get("pypi_downloads")),
             "hf_downloads": _coerce_int(by_field.get("hf_downloads")),
+            # Enriched repo signals.
+            "primary_language": by_field.get("repo_primary_language"),
+            "languages": by_field.get("repo_languages"),   # "Python:82,C++:15"
+            "topics": by_field.get("repo_topics"),
+            "homepage": by_field.get("repo_homepage"),
+            "has_tests": _bool("has_tests"),
+            "has_ci": _bool("has_ci"),
+            "has_docs": _bool("has_docs"),
+            "has_releases": _bool("has_releases"),
+            # Rule-based repo-health indicator (separate axis from judgement).
+            "repo_health": by_field.get("repo_health"),
+            "repo_health_reason": by_field.get("repo_health_reason"),
         }
 
         # Rule-based judgement from the scorer (stored as facts by ingest.py).

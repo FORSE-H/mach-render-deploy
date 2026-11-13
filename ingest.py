@@ -26,7 +26,7 @@ from core import catalog
 from core.embedding import Embedder, embedding_text
 from core.harvest import harvest_seed_from_sources
 from core.ports import SignalSource
-from core.scoring import judgement_fields
+from core.scoring import health_fields, judgement_fields
 from core.seeds import Seed, read_seeds_csv
 from core.sources import SOURCES
 
@@ -66,7 +66,7 @@ def score_entries(store: DuckDbStore) -> int:
         entry = catalog.get_entry(store, seed.identifier)
         if entry is None:
             continue
-        fields = judgement_fields(entry)
+        fields = judgement_fields(entry) + health_fields(entry)
         if fields:
             store.write_fields(seed.identifier, fields)
             scored += 1
