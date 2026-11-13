@@ -115,7 +115,78 @@ class GitHubClient:
                     else _replace_license(f, detected)
                     for f in fields
                 ]
+
+        # Language breakdown and code-health signals — each from its own cheap
+        # endpoint, so a single flaky call never loses the core repo facts.
+        now = datetime.now(timezone.utc)
+
+        def extra(name: str, value: Any) -> HarvestedField:
+            return HarvestedField(
+                field_name=name, value=None if value is None else str(value),
+                source_id=self.source_id, raw_value="", harvested_at=now,
+            )
+
+        langs = self._language_breakdown(owner, repo)
+        if langs is not None:
+            fields.append(extra("repo_languages", langs))
+
+        health = self._code_health(owner, repo)
+        for k, v in health.items():
+            fields.append(extra(k, v))
+
         return fields
+
+    def _language_breakdown(self, owner: str, repo: str) -> str | None:
+        """'Python:82,C++:15,Cython:3' — percentages by bytes, biggest first.
+        None if the call fails; '' is never returned."""
+        body = self._get_json(f"{_API_BASE}/repos/{owner}/{repo}/languages")
+        if not isinstance(body, dict) or not body:
+            return None
+        total = sum(v for v in body.values() if isinstance(v, int))
+        if total <= 0:
+            return None
+        pairs = sorted(body.items(), key=lambda kv: kv[1], reverse=True)
+        return ",".join(f"{lang}:{round(100 * n / total)}" for lang, n in pairs if round(100 * n / total) >= 1)
+
+    def _code_health(self, owner: str, repo: str) -> dict[str, str]:
+        """Honest proxies for 'is this a serious codebase': does it have tests,
+        CI, and tagged releases. Detected from the repo's top-level tree and the
+        releases endpoint — facts, never a quality verdict."""
+        out: dict[str, str] = {}
+        tree = self._get_json(f"{_API_BASE}/repos/{owner}/{repo}/git/trees/HEAD")
+        if isinstance(tree, dict) and isinstance(tree.get("tree"), list):
+            names = {str(n.get("path", "")).lower() for n in tree["tree"]}
+            has_tests = any(p in names for p in ("tests", "test", "spec", "specs")) or \
+                any(p.startswith("test_") or p.endswith("_test.py") for p in names)
+            has_ci = ".github" in names or any(
+                p in names for p in (".gitlab-ci.yml", ".travis.yml", "azure-pipelines.yml", ".circleci")
+            )
+            has_docs = any(p in names for p in ("docs", "doc", "documentation")) or \
+                any(p.startswith("readme") for p in names)
+            out["has_tests"] = str(has_tests)
+            out["has_ci"] = str(has_ci)
+            out["has_docs"] = str(has_docs)
+        releases = self._get_json(f"{_API_BASE}/repos/{owner}/{repo}/releases?per_page=1")
+        if isinstance(releases, list):
+            out["has_releases"] = str(len(releases) > 0)
+        return out
+
+    def _get_json(self, url: str) -> Any:
+        """GET a GitHub API URL, returning parsed JSON or None on any failure.
+        The harvest never breaks because one enrichment call did."""
+        headers = {"Accept": "application/vnd.github+json"}
+        if self._token:
+            headers["Authorization"] = f"Bearer {self._token}"
+        try:
+            resp = self._http.get(url, headers=headers, timeout=15.0)
+        except Exception:
+            return None
+        if resp.status_code != 200:
+            return None
+        try:
+            return resp.json()
+        except Exception:
+            return None
 
     def _detect_license_from_file(self, owner: str, repo: str) -> str | None:
         """Fetch the LICENSE file and match its text to a known SPDX id.
@@ -170,11 +241,20 @@ class GitHubClient:
         licence = payload.get("license") or {}
         spdx = licence.get("spdx_id") if isinstance(licence, dict) else None
 
+        topics = payload.get("topics") or []
+        topics_val = ",".join(topics) if isinstance(topics, list) and topics else None
+
         return [
             field("repo_stars", payload.get("stargazers_count")),
             field("repo_forks", payload.get("forks_count")),
             field("repo_last_commit", payload.get("pushed_at")),
+            field("repo_created", payload.get("created_at")),
             field("repo_archived", payload.get("archived")),
+            field("repo_open_issues", payload.get("open_issues_count")),
+            field("repo_size_kb", payload.get("size")),
+            field("repo_primary_language", payload.get("language")),
+            field("repo_homepage", payload.get("homepage") or None),
+            field("repo_topics", topics_val),
             field("license", spdx),
             field("description", payload.get("description")),
         ]
