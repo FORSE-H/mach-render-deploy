@@ -95,6 +95,9 @@ def export(store: DuckDbStore) -> dict:
             "has_ci": _bool("has_ci"),
             "has_docs": _bool("has_docs"),
             "has_releases": _bool("has_releases"),
+            # Rule-based repo-health indicator (separate axis from judgement).
+            "repo_health": by_field.get("repo_health"),
+            "repo_health_reason": by_field.get("repo_health_reason"),
         }
 
         # Rule-based judgement from the scorer (stored as facts by ingest.py).

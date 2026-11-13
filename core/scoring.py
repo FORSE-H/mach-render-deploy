@@ -68,6 +68,82 @@ def _facts(entry: Entry) -> dict[str, str | None]:
     return {f.field_name: f.value for f in entry.facts}
 
 
+# ── Repo-health indicator ─────────────────────────────────────────────────────
+# A separate, transparent axis from the Adopt/Assess/Caution judgement: it
+# answers "is this codebase alive and seriously maintained?" from the enriched
+# signals, with a one-line reason that names what it looked at. Rules in one
+# place, like the scorer, so the label always traces to why.
+HEALTH_SOURCE_ID = "mach_health"
+
+
+@dataclass(frozen=True)
+class RepoHealth:
+    status: str  # "Archived" | "Active" | "Maintained" | "Dormant" | "Stale" | None
+    reason: str
+
+
+def _truthy(value: str | None) -> bool:
+    return str(value).lower() == "true"
+
+
+def repo_health(entry: Entry, *, now: datetime | None = None) -> RepoHealth | None:
+    """Rule-based health label, or None when there's no repo signal to judge.
+
+    Archived wins outright. Otherwise recency sets the base (Active < 3mo,
+    Maintained < 12mo, Dormant < 24mo, else Stale), and the presence of tests/CI
+    is reported as corroborating evidence — it never upgrades a stale repo, only
+    describes how serious the codebase looks.
+    """
+    now = now or datetime.now(timezone.utc)
+    f = _facts(entry)
+    last = f.get("repo_last_commit")
+    if last is None and f.get("repo_stars") is None:
+        return None  # not a repo-backed entry
+
+    if _truthy(f.get("repo_archived")):
+        return RepoHealth("Archived", "repository archived by its maintainer")
+
+    months = _months_since(last, now=now)
+    if months is None:
+        return RepoHealth("Unknown", "no commit date available")
+
+    if months < 3:
+        status = "Active"
+    elif months < 12:
+        status = "Maintained"
+    elif months < 24:
+        status = "Dormant"
+    else:
+        status = "Stale"
+
+    # Corroborating "serious codebase" signals (descriptive, not score-changing).
+    marks = [name for name, key in (("tests", "has_tests"), ("CI", "has_ci"), ("releases", "has_releases"))
+             if _truthy(f.get(key))]
+    recency = (f"last commit ~{round(months)} mo ago" if months >= 1 else "committed within the last month")
+    if marks:
+        detail = f"{recency}; has {', '.join(marks)}"
+    else:
+        detail = f"{recency}; no tests/CI/releases detected"
+    return RepoHealth(status, detail)
+
+
+def health_fields(entry: Entry, *, now: datetime | None = None) -> list[HarvestedField]:
+    """The repo-health label + reason as lineage-bearing facts, or none for a
+    signal-less entry. Parallel to judgement_fields; its own source id."""
+    now = now or datetime.now(timezone.utc)
+    h = repo_health(entry, now=now)
+    if h is None:
+        return []
+
+    def fld(name: str, value: str) -> HarvestedField:
+        return HarvestedField(
+            field_name=name, value=value, source_id=HEALTH_SOURCE_ID,
+            raw_value="", harvested_at=now, fetch_status="ok",
+        )
+
+    return [fld("repo_health", h.status), fld("repo_health_reason", h.reason)]
+
+
 def score_entry(entry: Entry, *, now: datetime | None = None) -> Judgement:
     now = now or datetime.now(timezone.utc)
     facts = _facts(entry)
