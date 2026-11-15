@@ -37,6 +37,34 @@ _DEFAULT_OUT = _ROOT / "data" / "signals.json"
 _SIGNAL_FIELDS = ("repo_stars", "repo_forks", "repo_last_commit", "license", "repo_archived")
 
 
+# Mojibake sentinels: UTF-8 bytes that were mis-decoded as Windows-1252 start
+# with Â/â/Ã etc. We only attempt repair when such a marker is present, so clean
+# text is never touched.
+_MOJIBAKE_MARKERS = ("Â", "Ã", "â")  # Â, Ã, â
+
+
+def _demojibake(value: str | None) -> str | None:
+    """Repair cp1252-mojibake (e.g. an em-dash shown as 'â€"') back to UTF-8.
+
+    A value harvested on a Windows host can come back with UTF-8 bytes that were
+    decoded as Windows-1252 — '—' (E2 80 94) becomes 'â€"'. The public site must
+    never ship that, so before export we losslessly reverse it: re-encode as
+    cp1252 and decode as UTF-8. Guarded by a marker check and a round-trip test
+    so correct text (and genuinely accented text) is left exactly as-is.
+    """
+    if not value or not any(m in value for m in _MOJIBAKE_MARKERS):
+        return value
+    try:
+        repaired = value.encode("cp1252").decode("utf-8")
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return value
+    # Only accept the repair if it round-trips back to the original bytes, so we
+    # never mangle text that merely happens to contain one of the markers.
+    if repaired.encode("utf-8").decode("cp1252") == value:
+        return repaired
+    return value
+
+
 def _coerce_int(value: str | None) -> int | None:
     try:
         return int(value) if value not in (None, "") else None
@@ -63,7 +91,7 @@ def export(store: DuckDbStore) -> dict:
         facts = [
             {
                 "field_name": field,
-                "value": value,
+                "value": _demojibake(value),
                 "source_id": source_id,
                 "fetch_status": fetch_status,
             }
