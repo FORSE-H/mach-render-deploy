@@ -42,6 +42,11 @@ _LICENSE_SIGNATURES: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Unlicense", ("This is free and unencumbered software released into the public domain",)),
     ("CC0-1.0", ("CC0 1.0 Universal",)),
     ("CC-BY-4.0", ("Creative Commons Attribution 4.0",)),
+    # Open-hardware licences (common in the hardware category).
+    ("CERN-OHL-S-2.0", ("CERN Open Hardware Licence", "Strongly Reciprocal")),
+    ("CERN-OHL-W-2.0", ("CERN Open Hardware Licence", "Weakly Reciprocal")),
+    ("CERN-OHL-P-2.0", ("CERN Open Hardware Licence", "Permissive")),
+    ("TAPR-OHL-1.0", ("TAPR Open Hardware License",)),
 )
 
 

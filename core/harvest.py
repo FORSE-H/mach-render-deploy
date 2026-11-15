@@ -60,3 +60,28 @@ class ForgeAsSource:
         if not seed.code_repository:
             return []
         return self._forge.fetch_repo_signals(seed.code_repository)
+
+
+class MultiForgeSource:
+    """Routes a seed's repo URL to whichever forge client recognises its host.
+
+    Each forge client returns [] for a URL it doesn't handle, so this just tries
+    them in order and returns the first non-empty result. One source in the
+    pipeline covers GitHub, GitLab, Codeberg and Bitbucket; a repo on none of them
+    simply yields no repo facts (the entry stays not-auto-scored), exactly as a
+    single-forge setup did for a non-GitHub URL.
+    """
+
+    source_id = "multi_forge"
+
+    def __init__(self, forges: list[ForgeClient]) -> None:
+        self._forges = forges
+
+    def fetch_signals(self, seed: Seed) -> list[HarvestedField]:
+        if not seed.code_repository:
+            return []
+        for forge in self._forges:
+            fields = forge.fetch_repo_signals(seed.code_repository)
+            if fields:
+                return fields
+        return []

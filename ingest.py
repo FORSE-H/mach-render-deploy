@@ -119,7 +119,10 @@ def main() -> None:
 
     import httpx
 
+    from adapters.bitbucket_client import BitbucketClient
+    from adapters.codeberg_client import CodebergClient
     from adapters.github_client import GitHubClient
+    from adapters.gitlab_client import GitLabClient
     from adapters.huggingface_client import HuggingFaceClient
     from adapters.pypi_client import PyPIClient
 
@@ -129,11 +132,20 @@ def main() -> None:
 
         embedder = MiniLMEmbedder()
 
-    from core.harvest import ForgeAsSource
+    from core.harvest import MultiForgeSource
 
     seeds = read_seeds_csv(args.seeds)
     with httpx.Client(follow_redirects=True) as http:
-        sources: list[SignalSource] = [ForgeAsSource(GitHubClient(http, token=args.token))]
+        # One source routes each repo URL to the forge that recognises its host.
+        # The GitHub token (if any) is only sent to GitHub; the others are read
+        # anonymously (their public rate limits are ample for a weekly harvest).
+        forges = [
+            GitHubClient(http, token=args.token),
+            GitLabClient(http),
+            CodebergClient(http),
+            BitbucketClient(http),
+        ]
+        sources: list[SignalSource] = [MultiForgeSource(forges)]
         if not args.repo_only:
             sources += [PyPIClient(http), HuggingFaceClient(http)]
         fields = _build_to(args.db, seeds, sources, embedder)

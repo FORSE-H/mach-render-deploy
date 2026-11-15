@@ -31,6 +31,27 @@ SOURCES: tuple[MetadataSource, ...] = (
         attribution_required=False,
     ),
     MetadataSource(
+        source_id="gitlab_api",
+        name="GitLab REST API",
+        base_url="https://gitlab.com/api/v4",
+        data_licence="GitLab Terms of Service",
+        attribution_required=False,
+    ),
+    MetadataSource(
+        source_id="codeberg_api",
+        name="Codeberg (Gitea) API",
+        base_url="https://codeberg.org/api/v1",
+        data_licence="Codeberg Terms of Use",
+        attribution_required=False,
+    ),
+    MetadataSource(
+        source_id="bitbucket_api",
+        name="Bitbucket REST API",
+        base_url="https://api.bitbucket.org/2.0",
+        data_licence="Bitbucket Terms of Service",
+        attribution_required=False,
+    ),
+    MetadataSource(
         source_id="pypi",
         name="PyPI download stats (pypistats.org)",
         base_url="https://pypistats.org",
