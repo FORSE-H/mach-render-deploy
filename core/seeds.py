@@ -17,7 +17,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-SEED_COLUMNS = ("identifier", "name", "url", "code_repository", "category")
+SEED_COLUMNS = ("identifier", "name", "url", "code_repository", "category", "hf_url")
 
 
 class Seed(BaseModel):
@@ -26,10 +26,16 @@ class Seed(BaseModel):
     url: str
     code_repository: str | None = None
     category: str
+    # Optional Hugging Face model/dataset URL, when the entry's primary url/repo
+    # is not its HF page (e.g. a dataset whose url is a project site and whose
+    # code lives on GitHub). Lets the HF harvester find it. Backward-compatible:
+    # a seeds.csv without this column simply leaves it None.
+    hf_url: str | None = None
 
 
 def read_seeds_csv(path: Path) -> list[Seed]:
-    """Load seeds from the durable CSV. Blank code_repository becomes None."""
+    """Load seeds from the durable CSV. Blank optional fields become None.
+    The hf_url column is optional — older CSVs without it still load."""
     with path.open(encoding="utf-8", newline="") as f:
         return [
             Seed(
@@ -38,6 +44,7 @@ def read_seeds_csv(path: Path) -> list[Seed]:
                 url=row["url"],
                 code_repository=row.get("code_repository") or None,
                 category=row["category"],
+                hf_url=row.get("hf_url") or None,
             )
             for row in csv.DictReader(f)
         ]
