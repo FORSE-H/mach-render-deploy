@@ -1,0 +1,44 @@
+version: 2
+updates:
+  # Python dependencies (uv / pyproject.toml + uv.lock). Grouped so Dependabot
+  # opens a few batched PRs rather than one per transitive package. Security
+  # updates are raised regardless of the schedule.
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "deps"
+    groups:
+      # Everything that runs in production (fastapi/uvicorn/httpx/duckdb/
+      # pydantic/fastmcp/fastembed and their trees) moves together.
+      production:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      # Dev/test tooling (pytest, ruff, pre-commit, schemathesis) — never shipped
+      # in the container (it runs `uv sync --no-dev`), so batch these separately.
+      dev:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Keep GitHub Actions up to date (SHA-pinned actions get their SHA bumped).
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
