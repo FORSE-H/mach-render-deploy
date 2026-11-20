@@ -59,6 +59,33 @@ SOURCES: tuple[MetadataSource, ...] = (
         attribution_required=False,
     ),
     MetadataSource(
+        source_id="discovery",
+        name="MACH identifier discovery (README/manifests/badges/CITATION.cff)",
+        data_licence="derived from each repo's own files",
+        attribution_required=False,
+    ),
+    MetadataSource(
+        source_id="conda",
+        name="conda-forge downloads (anaconda.org)",
+        base_url="https://anaconda.org",
+        data_licence="public",
+        attribution_required=False,
+    ),
+    MetadataSource(
+        source_id="npm",
+        name="npm download stats (api.npmjs.org)",
+        base_url="https://www.npmjs.com",
+        data_licence="public",
+        attribution_required=False,
+    ),
+    MetadataSource(
+        source_id="cran",
+        name="CRAN download stats (cranlogs.r-pkg.org)",
+        base_url="https://cran.r-project.org",
+        data_licence="public",
+        attribution_required=False,
+    ),
+    MetadataSource(
         source_id="huggingface",
         name="Hugging Face Hub API",
         base_url="https://huggingface.co",

@@ -121,10 +121,12 @@ def main() -> None:
 
     from adapters.bitbucket_client import BitbucketClient
     from adapters.codeberg_client import CodebergClient
+    from adapters.discovery_client import DiscoveryClient
     from adapters.github_client import GitHubClient
     from adapters.gitlab_client import GitLabClient
     from adapters.huggingface_client import HuggingFaceClient
     from adapters.pypi_client import PyPIClient
+    from adapters.registry_clients import CondaClient, CranClient, NpmClient
 
     embedder = None
     if not args.no_embed:
@@ -132,7 +134,7 @@ def main() -> None:
 
         embedder = MiniLMEmbedder()
 
-    from core.harvest import MultiForgeSource
+    from core.harvest import DiscoveryEnrichedSource, MultiForgeSource
 
     seeds = read_seeds_csv(args.seeds)
     with httpx.Client(follow_redirects=True) as http:
@@ -147,7 +149,19 @@ def main() -> None:
         ]
         sources: list[SignalSource] = [MultiForgeSource(forges)]
         if not args.repo_only:
-            sources += [PyPIClient(http), HuggingFaceClient(http)]
+            # Discovery reads each repo's own files to find package names / ids,
+            # then enriches from conda-forge / npm / CRAN in the same pass. The
+            # legacy PyPI/HF sources (seed-inferred) still run alongside it.
+            sources += [
+                DiscoveryEnrichedSource(
+                    DiscoveryClient(http),
+                    conda=CondaClient(http),
+                    npm=NpmClient(http),
+                    cran=CranClient(http),
+                ),
+                PyPIClient(http),
+                HuggingFaceClient(http),
+            ]
         fields = _build_to(args.db, seeds, sources, embedder)
 
     embed_note = "no embeddings" if args.no_embed else "with embeddings"

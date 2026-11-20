@@ -114,6 +114,17 @@ def export(store: DuckDbStore) -> dict:
             "license": by_field.get("license"),
             "pypi_downloads": _coerce_int(by_field.get("pypi_downloads")),
             "hf_downloads": _coerce_int(by_field.get("hf_downloads")),
+            # Downloads from the other package registries (discovery-fed).
+            "conda_downloads": _coerce_int(by_field.get("conda_downloads")),
+            "npm_downloads": _coerce_int(by_field.get("npm_downloads")),
+            "cran_downloads": _coerce_int(by_field.get("cran_downloads")),
+            # Identifiers discovery found in the repo's own files (comma-joined).
+            "discovered_pypi": by_field.get("discovered_pypi"),
+            "discovered_conda": by_field.get("discovered_conda"),
+            "discovered_npm": by_field.get("discovered_npm"),
+            "discovered_cran": by_field.get("discovered_cran"),
+            "discovered_hf": by_field.get("discovered_hf"),
+            "discovered_doi": by_field.get("discovered_doi"),
             # Enriched repo signals.
             "primary_language": by_field.get("repo_primary_language"),
             "languages": by_field.get("repo_languages"),   # "Python:82,C++:15"

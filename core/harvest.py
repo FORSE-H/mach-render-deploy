@@ -85,3 +85,58 @@ class MultiForgeSource:
             if fields:
                 return fields
         return []
+
+
+class DiscoveryEnrichedSource:
+    """Discovery + the registry/citation sources it feeds, as one pass.
+
+    Harvest sources run independently and don't see each other's facts, so a
+    registry lookup can't read discovery's output through the plain SignalSource
+    interface. This composite closes that: it runs discovery on the seed's repo,
+    emits the `discovered_*` facts for lineage, then hands the discovered package
+    names and ids to the registry/HF clients IN-MEMORY and collects their facts
+    too — so a conda/npm/CRAN/HF lookup fires on a name discovery found, with no
+    hand-typed seed field.
+
+    Clients are injected and optional; a missing one is simply skipped. Each
+    client already returns honest status facts and never raises, so this stays
+    harvest-safe. A seed's hand-set value (e.g. seed.hf_url) still takes
+    precedence: the legacy HF/PyPI sources run separately and their seed-derived
+    facts win by being present alongside these.
+    """
+
+    source_id = "discovery_enriched"
+
+    def __init__(
+        self,
+        discovery,            # DiscoveryClient
+        *,
+        conda=None,           # CondaClient
+        npm=None,             # NpmClient
+        cran=None,            # CranClient
+        hf=None,              # HuggingFaceClient (optional: enrich discovered HF ids)
+    ) -> None:
+        self._discovery = discovery
+        self._conda = conda
+        self._npm = npm
+        self._cran = cran
+        self._hf = hf
+
+    def fetch_signals(self, seed: Seed) -> list[HarvestedField]:
+        if not seed.code_repository:
+            return []
+        found = self._discovery.discover(seed.code_repository)
+        fields: list[HarvestedField] = list(
+            self._discovery.fetch_signals_from_discovered(found)
+        )
+
+        # Feed the discovered names to each registry (first name per kind — the
+        # declared/most-prominent one; extras are recorded in the discovered_* fact).
+        if self._conda and found.conda:
+            fields += self._conda.fetch_for_package(found.conda[0])
+        if self._npm and found.npm:
+            fields += self._npm.fetch_for_package(found.npm[0])
+        if self._cran and found.cran:
+            fields += self._cran.fetch_for_package(found.cran[0])
+
+        return fields
