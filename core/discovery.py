@@ -71,11 +71,15 @@ _NOISE_NAMES = {"badge", "shield", "version", "status", "none", "", "latest"}
 
 
 def _clean_doi(doi: str | None) -> str | None:
-    """Trim trailing punctuation and badge image suffixes from a DOI."""
+    """Trim trailing punctuation, image suffixes, and journal URL fragments
+    (e.g. a Frontiers DOI copied with a trailing '/full', '/abstract', '/pdf')
+    so the bare resolvable DOI remains."""
     if not doi:
         return None
     d = doi.rstrip(").,;")
     d = re.sub(r"\.(svg|png|json|jpg)$", "", d)
+    # Strip trailing journal-site path fragments that aren't part of the DOI.
+    d = re.sub(r"/(full|abstract|pdf|html|epdf|meta)$", "", d, flags=re.I)
     return d or None
 
 

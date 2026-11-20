@@ -114,12 +114,14 @@ class DiscoveryEnrichedSource:
         conda=None,           # CondaClient
         npm=None,             # NpmClient
         cran=None,            # CranClient
+        openalex=None,        # OpenAlexClient (citations from a discovered DOI)
         hf=None,              # HuggingFaceClient (optional: enrich discovered HF ids)
     ) -> None:
         self._discovery = discovery
         self._conda = conda
         self._npm = npm
         self._cran = cran
+        self._openalex = openalex
         self._hf = hf
 
     def fetch_signals(self, seed: Seed) -> list[HarvestedField]:
@@ -138,5 +140,9 @@ class DiscoveryEnrichedSource:
             fields += self._npm.fetch_for_package(found.npm[0])
         if self._cran and found.cran:
             fields += self._cran.fetch_for_package(found.cran[0])
+
+        # Citations: the first discovered DOI → OpenAlex (cited_by_count, venue, year).
+        if self._openalex and found.doi:
+            fields += self._openalex.fetch_for_doi(found.doi[0])
 
         return fields
