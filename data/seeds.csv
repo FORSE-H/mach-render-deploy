@@ -232,3 +232,7 @@ openflexure-microscope,OpenFlexure Microscope,https://openflexure.org/,https://g
 opentrons,Opentrons,https://opentrons.com/,https://github.com/Opentrons/opentrons,hardware,
 openuc2,openUC2,https://openuc2.com/,https://github.com/openUC2/UC2-GIT,hardware,
 un0rick,un0rick,https://un0rick.cc/,https://github.com/kelu124/un0rick,hardware,
+ballerina-fhir,Ballerina Health FHIR R4,https://github.com/ballerina-platform/module-ballerinax-health.fhir.r4,https://github.com/ballerina-platform/module-ballerinax-health.fhir.r4,software,
+bwell-fhir,bWell FHIR Server (Helix),https://github.com/icanbwell/fhir-server,https://github.com/icanbwell/fhir-server,software,
+helios-fhir,Helios FHIR Server,https://github.com/HeliosSoftware/hfs,https://github.com/HeliosSoftware/hfs,software,
+linuxforhealth-fhir,LinuxForHealth FHIR Server,https://github.com/LinuxForHealth/FHIR,https://github.com/LinuxForHealth/FHIR,software,
