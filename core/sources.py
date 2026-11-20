@@ -86,6 +86,13 @@ SOURCES: tuple[MetadataSource, ...] = (
         attribution_required=False,
     ),
     MetadataSource(
+        source_id="openalex",
+        name="OpenAlex (citations & academic impact)",
+        base_url="https://api.openalex.org",
+        data_licence="CC0",
+        attribution_required=False,
+    ),
+    MetadataSource(
         source_id="huggingface",
         name="Hugging Face Hub API",
         base_url="https://huggingface.co",

@@ -125,6 +125,11 @@ def export(store: DuckDbStore) -> dict:
             "discovered_cran": by_field.get("discovered_cran"),
             "discovered_hf": by_field.get("discovered_hf"),
             "discovered_doi": by_field.get("discovered_doi"),
+            # Citations / academic impact (OpenAlex, from a discovered DOI).
+            "citations": _coerce_int(by_field.get("citations")),
+            "publication_year": _coerce_int(by_field.get("publication_year")),
+            "openalex_venue": by_field.get("openalex_venue"),
+            "openalex_id": by_field.get("openalex_id"),
             # Enriched repo signals.
             "primary_language": by_field.get("repo_primary_language"),
             "languages": by_field.get("repo_languages"),   # "Python:82,C++:15"

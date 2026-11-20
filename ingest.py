@@ -125,6 +125,7 @@ def main() -> None:
     from adapters.github_client import GitHubClient
     from adapters.gitlab_client import GitLabClient
     from adapters.huggingface_client import HuggingFaceClient
+    from adapters.openalex_client import OpenAlexClient
     from adapters.pypi_client import PyPIClient
     from adapters.registry_clients import CondaClient, CranClient, NpmClient
 
@@ -158,6 +159,7 @@ def main() -> None:
                     conda=CondaClient(http),
                     npm=NpmClient(http),
                     cran=CranClient(http),
+                    openalex=OpenAlexClient(http),
                 ),
                 PyPIClient(http),
                 HuggingFaceClient(http),
