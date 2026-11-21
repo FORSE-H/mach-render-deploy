@@ -20,9 +20,22 @@ The free plan sleeps after ~15 min idle; the next request wakes it (~50s).
 - `GET /dataset/{id}` — one entry: seed + harvested facts, each with its source
 - `POST /search` — semantic search `{"query": "...", "limit": 5}`
 - `GET /livez` / `GET /readyz` — health / readiness
+- `GET /stats` — MCP usage pulse: per-tool call counts + last-called time. A
+  privacy-safe tally (no caller identity, no inputs, only counts). Counts are
+  "since" the timestamp in the response — they restart on redeploy unless
+  `MACH_ANALYTICS_PATH` points at durable storage (see below).
 - `GET /docs` — OpenAPI UI
 - `/mcp` — MCP server (stateless HTTP) for AI agents. Tools: `list_entries`,
-  `get_entry`, `search_catalog`.
+  `get_entry`, `get_history`, `search_catalog`, `explain_scoring`.
+
+### Environment
+
+- `MACH_DB_PATH` — DuckDB snapshot to serve (default `data/mach.duckdb`).
+- `MACH_CORS_ORIGINS` — comma-separated allowed origins, or `*` for any.
+- `MACH_ANALYTICS_PATH` — optional file for the `/stats` tally. When set, counts
+  are loaded on startup and written back after each MCP call (atomic, best-effort),
+  so they survive within a container's lifetime. Unset, or on an ephemeral
+  filesystem (e.g. Render's free tier), counts are in-memory and reset on redeploy.
 
 Connect an MCP client (Claude Desktop, Cursor):
 

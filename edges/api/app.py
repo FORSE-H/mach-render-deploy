@@ -20,6 +20,7 @@ from pydantic import BaseModel
 
 from core import catalog
 from core.catalog import EntryStore, QueryEmbedder
+from core.usage import UsageCounter
 
 # Browser clients (the website's semantic search) need CORS. The API is public
 # and read-only, so allowing the site origins plus localhost for dev is safe.
@@ -43,6 +44,7 @@ def create_app(
     store: EntryStore,
     embedder: QueryEmbedder | None = None,
     *,
+    usage: UsageCounter | None = None,
     lifespan=None,
 ) -> FastAPI:
     app = FastAPI(title="MACH catalog API", version="0.1.0", lifespan=lifespan)
@@ -78,6 +80,16 @@ def create_app(
             body["built_at"] = str(meta["built_at"])
             body["embedder_model"] = meta["embedder_model"]
         return body
+
+    @app.get("/stats")
+    def stats() -> dict[str, object]:
+        """MCP usage pulse: how many times each MCP tool has been called, and when
+        it was last called. A privacy-safe tally — no caller identity, no inputs,
+        only per-tool counts. Counts restart when the counter has no durable store
+        (e.g. on redeploy), so read them as "since" the timestamp returned."""
+        if usage is None:
+            return {"since": None, "total_calls": 0, "tools": {}}
+        return usage.snapshot()
 
     @app.get("/catalog")
     def list_catalog(category: str | None = None) -> list[catalog.EntrySummary]:

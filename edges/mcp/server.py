@@ -11,13 +11,31 @@ data without spending its context window on it.
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
+
 from fastmcp import FastMCP
 
 from core import catalog
 from core.catalog import EntryStore, QueryEmbedder
+from core.usage import UsageCounter
 
 
-def create_mcp(store: EntryStore, embedder: QueryEmbedder | None = None) -> FastMCP:
+def default_usage_counter() -> UsageCounter:
+    """Build the serving counter. MACH_ANALYTICS_PATH, if set, persists the tally
+    (best-effort; ephemeral on a platform that wipes the FS on redeploy)."""
+    raw = os.environ.get("MACH_ANALYTICS_PATH")
+    return UsageCounter(Path(raw) if raw else None)
+
+
+def create_mcp(
+    store: EntryStore,
+    embedder: QueryEmbedder | None = None,
+    usage: UsageCounter | None = None,
+) -> FastMCP:
+    # A no-op counter is wired when none is supplied, so every tool can call
+    # usage.record(...) unconditionally and tests need not pass one.
+    usage = usage if usage is not None else UsageCounter()
     mcp = FastMCP(
         name="MACH catalog",
         instructions=(
@@ -31,12 +49,14 @@ def create_mcp(store: EntryStore, embedder: QueryEmbedder | None = None) -> Fast
     def list_entries(category: str | None = None) -> list[dict]:
         """List catalog entries, optionally filtered by category
         (software, ai-ml-models, datasets, mcp-servers, data-sources, specs, catalogs)."""
+        usage.record("list_entries")
         return [e.model_dump() for e in catalog.list_entries(store, category=category)]
 
     @mcp.tool
     def get_entry(identifier: str) -> dict | None:
         """Full metadata for one entry: its seed fields plus every harvested fact
         with the source it came from. Returns null if no such entry."""
+        usage.record("get_entry")
         entry = catalog.get_entry(store, identifier)
         return entry.model_dump() if entry is not None else None
 
@@ -46,6 +66,7 @@ def create_mcp(store: EntryStore, embedder: QueryEmbedder | None = None) -> Fast
         each change records the field, its new and previous value, the source, and
         when it changed. Lets you see content deviations (e.g. a licence changing,
         a judgement flipping) with provenance. Empty if nothing has changed yet."""
+        usage.record("get_history")
         return [c.model_dump() for c in catalog.get_history(store, identifier)]
 
     @mcp.tool
@@ -53,6 +74,7 @@ def create_mcp(store: EntryStore, embedder: QueryEmbedder | None = None) -> Fast
         """Semantic search over the catalog. Returns the top matches with a
         similarity score, optionally restricted to a category. Requires search
         to be configured."""
+        usage.record("search_catalog")
         if embedder is None:
             raise ValueError("Search unavailable: no embedder configured")
         hits = catalog.search(store, embedder, query, limit=limit, category=category)
@@ -66,6 +88,7 @@ def create_mcp(store: EntryStore, embedder: QueryEmbedder | None = None) -> Fast
         null if no such entry; scored=false for editorial entries with no signals."""
         from core.scoring import score_entry
 
+        usage.record("explain_scoring")
         entry = catalog.get_entry(store, identifier)
         if entry is None:
             return None
@@ -88,4 +111,4 @@ def get_mcp() -> FastMCP:
     from adapters.minilm_embedder import MiniLMEmbedder
     from edges.api.app import _default_store
 
-    return create_mcp(_default_store(), MiniLMEmbedder())
+    return create_mcp(_default_store(), MiniLMEmbedder(), default_usage_counter())
