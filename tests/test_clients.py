@@ -7,9 +7,11 @@ sinking the whole harvest.
 """
 
 from adapters.openalex_client import OpenAlexClient, _normalise_doi
+from adapters.openssf_client import OpenSSFClient, parse_github
+from adapters.osv_client import OSVClient
 from adapters.registry_clients import CondaClient, CranClient, NpmClient
 
-from tests.conftest import FakeHttp, FakeResponse
+from tests.conftest import FakeHttp, FakePostHttp, FakeResponse
 
 
 def _by_name(facts):
@@ -111,3 +113,60 @@ def test_cran_zero_downloads_is_not_found():
     http = FakeHttp([("cranlogs", FakeResponse(200, [{"downloads": 0, "package": "x"}]))])
     facts = CranClient(http).fetch_for_package("x")
     assert facts[0].fetch_status == "not_found"
+
+
+# ── OpenSSF Scorecard ─────────────────────────────────────────────────────────
+
+
+def test_openssf_ok():
+    body = {"score": 7.8, "date": "2026-11-16",
+            "checks": [{"name": "Maintained", "score": 10}, {"name": "Code-Review", "score": 9}]}
+    http = FakeHttp([("securityscorecards.dev", FakeResponse(200, body))])
+    facts = OpenSSFClient(http).fetch_for_repo("https://github.com/Project-MONAI/MONAI")
+    f = _by_name(facts)
+    assert f["ssf_score"].value == "7.8"
+    assert f["ssf_maintained"].value == "10"
+    assert f["ssf_code_review"].value == "9"
+
+
+def test_openssf_404_not_in_db():
+    http = FakeHttp([("securityscorecards.dev", FakeResponse(404))])
+    facts = OpenSSFClient(http).fetch_for_repo("https://github.com/a/b")
+    assert facts[0].fetch_status == "not_found"
+
+
+def test_openssf_non_github_skipped_without_call():
+    http = FakeHttp()
+    facts = OpenSSFClient(http).fetch_for_repo("https://gitlab.com/a/b")
+    assert facts[0].fetch_status == "not_found"
+    assert http.calls == []  # never calls Scorecard for a non-GitHub repo
+
+
+def test_parse_github():
+    assert parse_github("https://github.com/owner/repo") == ("owner", "repo")
+    assert parse_github("https://gitlab.com/owner/repo") is None
+
+
+# ── OSV ───────────────────────────────────────────────────────────────────────
+
+
+def test_osv_counts_vulns():
+    body = {"vulns": [{"id": "GHSA-1"}, {"id": "GHSA-2"}, {"id": "GHSA-3"}]}
+    http = FakePostHttp(FakeResponse(200, body))
+    facts = OSVClient(http).fetch_for_package("pillow", "PyPI")
+    assert facts[0].field_name == "osv_known_vulns"
+    assert facts[0].value == "3"
+    assert facts[0].fetch_status == "ok"
+
+
+def test_osv_no_vulns_is_zero():
+    http = FakePostHttp(FakeResponse(200, {}))
+    facts = OSVClient(http).fetch_for_package("clean-pkg", "PyPI")
+    assert facts[0].value == "0"
+    assert facts[0].fetch_status == "ok"
+
+
+def test_osv_429_rate_limited():
+    http = FakePostHttp(FakeResponse(429))
+    facts = OSVClient(http).fetch_for_package("x", "PyPI")
+    assert facts[0].fetch_status == "rate_limited"
