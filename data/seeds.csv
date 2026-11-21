@@ -239,3 +239,4 @@ linuxforhealth-fhir,LinuxForHealth FHIR Server,https://github.com/LinuxForHealth
 fastvep,fastVEP,https://fastvep.org/,https://github.com/Huang-lab/fastVEP,software,
 pro-act,PRO-ACT,https://ncri1.partners.org/ProACT,,data-sources,
 psychstrata-dashboard,PsychStrata Dashboard,https://demo.psychstrata.bio.scai.fraunhofer.de/,https://github.com/SCAI-BIO/psychstrata-dashboard,software,
+datastew,datastew,https://github.com/SCAI-BIO/datastew,https://github.com/SCAI-BIO/datastew,software,
