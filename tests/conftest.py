@@ -45,3 +45,16 @@ class FakeHttp:
             if sub in url:
                 return resp
         return FakeResponse(404)
+
+
+class FakePostHttp:
+    """A fake HTTP client exposing .post (for OSV, which queries by POST). Returns
+    the single canned response regardless of body."""
+
+    def __init__(self, response: FakeResponse):
+        self._response = response
+        self.calls: list[dict] = []
+
+    def post(self, url, *, json, headers, timeout):
+        self.calls.append({"url": url, "json": json})
+        return self._response

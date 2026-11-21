@@ -115,6 +115,8 @@ class DiscoveryEnrichedSource:
         npm=None,             # NpmClient
         cran=None,            # CranClient
         openalex=None,        # OpenAlexClient (citations from a discovered DOI)
+        openssf=None,         # OpenSSFClient (security posture from the repo URL)
+        osv=None,             # OSVClient (known advisories from a discovered package)
         hf=None,              # HuggingFaceClient (optional: enrich discovered HF ids)
     ) -> None:
         self._discovery = discovery
@@ -122,6 +124,8 @@ class DiscoveryEnrichedSource:
         self._npm = npm
         self._cran = cran
         self._openalex = openalex
+        self._openssf = openssf
+        self._osv = osv
         self._hf = hf
 
     def fetch_signals(self, seed: Seed) -> list[HarvestedField]:
@@ -144,5 +148,18 @@ class DiscoveryEnrichedSource:
         # Citations: the first discovered DOI → OpenAlex (cited_by_count, venue, year).
         if self._openalex and found.doi:
             fields += self._openalex.fetch_for_doi(found.doi[0])
+
+        # Security posture: OpenSSF Scorecard from the repo URL (GitHub only).
+        if self._openssf:
+            fields += self._openssf.fetch_for_repo(seed.code_repository)
+
+        # Known advisories: OSV for the first discovered package (PyPI > npm > cran).
+        if self._osv:
+            if found.pypi:
+                fields += self._osv.fetch_for_package(found.pypi[0], "PyPI")
+            elif found.npm:
+                fields += self._osv.fetch_for_package(found.npm[0], "npm")
+            elif found.cran:
+                fields += self._osv.fetch_for_package(found.cran[0], "CRAN")
 
         return fields

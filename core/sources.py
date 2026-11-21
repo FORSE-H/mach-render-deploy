@@ -93,6 +93,20 @@ SOURCES: tuple[MetadataSource, ...] = (
         attribution_required=False,
     ),
     MetadataSource(
+        source_id="openssf",
+        name="OpenSSF Scorecard (security posture)",
+        base_url="https://api.securityscorecards.dev",
+        data_licence="Apache-2.0 (OpenSSF)",
+        attribution_required=False,
+    ),
+    MetadataSource(
+        source_id="osv",
+        name="OSV.dev (known vulnerabilities)",
+        base_url="https://api.osv.dev",
+        data_licence="CC-BY-4.0",
+        attribution_required=False,
+    ),
+    MetadataSource(
         source_id="huggingface",
         name="Hugging Face Hub API",
         base_url="https://huggingface.co",

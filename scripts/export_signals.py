@@ -130,6 +130,13 @@ def export(store: DuckDbStore) -> dict:
             "publication_year": _coerce_int(by_field.get("publication_year")),
             "openalex_venue": by_field.get("openalex_venue"),
             "openalex_id": by_field.get("openalex_id"),
+            # Security posture (OpenSSF Scorecard 0-10 + key checks) and known
+            # advisories (OSV). A separate axis from the Adopt/Assess judgement.
+            "ssf_score": by_field.get("ssf_score"),
+            "ssf_maintained": _coerce_int(by_field.get("ssf_maintained")),
+            "ssf_code_review": _coerce_int(by_field.get("ssf_code_review")),
+            "ssf_date": by_field.get("ssf_date"),
+            "osv_known_vulns": _coerce_int(by_field.get("osv_known_vulns")),
             # Enriched repo signals.
             "primary_language": by_field.get("repo_primary_language"),
             "languages": by_field.get("repo_languages"),   # "Python:82,C++:15"
