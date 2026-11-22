@@ -55,7 +55,7 @@ omcp,OMCP,https://fastomop.github.io/omcp/,https://github.com/fastomop/omcp,mcp-
 openehr-mcp-cadasto,openEHR Assistant MCP (Cadasto),https://github.com/Cadasto/openehr-assistant-mcp,https://github.com/Cadasto/openehr-assistant-mcp,mcp-servers,
 openehr-mcp-deak,openEHR MCP Server (deak-ai),https://github.com/deak-ai/openehr-mcp-server,https://github.com/deak-ai/openehr-mcp-server,mcp-servers,
 snomed-ct-mcp,MCP SNOMED CT,https://github.com/eigenbau/mcp-snomed-ct,https://github.com/eigenbau/mcp-snomed-ct,mcp-servers,
-tooluniverse,ToolUniverse,https://zitniklab.hms.harvard.edu/TxAgent/,https://github.com/mims-harvard/ToolUniverse,mcp-servers,
+tooluniverse,ToolUniverse,https://aiscientist.tools,https://github.com/mims-harvard/ToolUniverse,mcp-servers,
 bioreason,BioReason,https://github.com/bowang-lab/BioReason,https://github.com/bowang-lab/BioReason,ai-ml-models,https://huggingface.co/collections/wanglab/bioreason-683cd17172a037a31d208f70
 cellvit,CellViT,https://github.com/TIO-IKIM/CellViT,https://github.com/TIO-IKIM/CellViT,ai-ml-models,
 conch,CONCH,https://huggingface.co/MahmoodLab/CONCH,https://github.com/mahmoodlab/CONCH,ai-ml-models,
