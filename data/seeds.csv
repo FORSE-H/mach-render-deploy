@@ -240,3 +240,11 @@ fastvep,fastVEP,https://fastvep.org/,https://github.com/Huang-lab/fastVEP,softwa
 pro-act,PRO-ACT,https://ncri1.partners.org/ProACT,,data-sources,
 psychstrata-dashboard,PsychStrata Dashboard,https://demo.psychstrata.bio.scai.fraunhofer.de/,https://github.com/SCAI-BIO/psychstrata-dashboard,software,
 datastew,datastew,https://github.com/SCAI-BIO/datastew,https://github.com/SCAI-BIO/datastew,software,
+merlin,Merlin,https://huggingface.co/stanfordmimi/Merlin,https://github.com/StanfordMIMI/Merlin,ai-ml-models,https://huggingface.co/stanfordmimi/Merlin
+medvae,MedVAE,https://huggingface.co/stanfordmimi/MedVAE,https://github.com/StanfordMIMI/MedVAE,ai-ml-models,https://huggingface.co/stanfordmimi/MedVAE
+roentgen-v2,RoentGen-v2,https://github.com/StanfordMIMI/RoentGen-v2,https://github.com/StanfordMIMI/RoentGen-v2,ai-ml-models,
+comp2comp,Comp2Comp,https://github.com/StanfordMIMI/Comp2Comp,https://github.com/StanfordMIMI/Comp2Comp,software,
+medval,MedVAL,https://github.com/StanfordMIMI/MedVAL,https://github.com/StanfordMIMI/MedVAL,software,https://huggingface.co/stanfordmimi/MedVAL-4B
+clin-summ,clin-summ,https://github.com/StanfordMIMI/clin-summ,https://github.com/StanfordMIMI/clin-summ,software,
+skm-tea,SKM-TEA,https://github.com/StanfordMIMI/skm-tea,https://github.com/StanfordMIMI/skm-tea,datasets,
+clin-bhc-summ,clin-bhc-summ,https://github.com/StanfordMIMI/clin-bhc-summ,https://github.com/StanfordMIMI/clin-bhc-summ,datasets,
