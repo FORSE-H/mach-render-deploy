@@ -9,9 +9,23 @@ sinking the whole harvest.
 from adapters.openalex_client import OpenAlexClient, _normalise_doi
 from adapters.openssf_client import OpenSSFClient, parse_github
 from adapters.osv_client import OSVClient
+from adapters.pypi_client import PyPIClient, _github_slug
 from adapters.registry_clients import CondaClient, CranClient, NpmClient
+from core.seeds import Seed
 
 from tests.conftest import FakeHttp, FakePostHttp, FakeResponse
+
+
+def _seed(identifier, repo):
+    return Seed(identifier=identifier, name=identifier, url="https://x", code_repository=repo, category="software")
+
+
+def _meta(repo_url):
+    """A PyPI /pypi/<name>/json body that declares one repository URL."""
+    return {"info": {"project_urls": {"Source": repo_url}, "home_page": None}}
+
+
+_STATS_OK = {"data": {"last_month": 4321}}
 
 
 def _by_name(facts):
@@ -170,3 +184,67 @@ def test_osv_429_rate_limited():
     http = FakePostHttp(FakeResponse(429))
     facts = OSVClient(http).fetch_for_package("x", "PyPI")
     assert facts[0].fetch_status == "rate_limited"
+
+
+# ── PyPI ownership gate ───────────────────────────────────────────────────────
+
+
+def test_github_slug_normalises():
+    assert _github_slug("https://github.com/Org/Repo.git") == "org/repo"
+    assert _github_slug("https://github.com/Org/Repo/tree/main") == "org/repo"
+    assert _github_slug("https://gitlab.com/x/y") is None
+    assert _github_slug(None) is None
+
+
+def test_pypi_owner_match_keeps_downloads():
+    # PyPI package's repo matches the entry's repo -> trust the count.
+    http = FakeHttp([
+        ("pypi.org/pypi/scgpt/json", FakeResponse(200, _meta("https://github.com/bowang-lab/scgpt"))),
+        ("pypistats.org/api/packages/scgpt", FakeResponse(200, _STATS_OK)),
+    ])
+    facts = PyPIClient(http).fetch_signals(_seed("scgpt", "https://github.com/bowang-lab/scgpt"))
+    assert facts[0].field_name == "pypi_downloads"
+    assert facts[0].fetch_status == "ok"
+    assert facts[0].value == "4321"
+
+
+def test_pypi_owner_mismatch_is_not_found():
+    # The name collides: PyPI 'care' points at a different repo than the entry.
+    # The stats route is present but must NOT be trusted -> not_found, no number.
+    http = FakeHttp([
+        ("pypi.org/pypi/care/json", FakeResponse(200, _meta("https://github.com/carreau/care"))),
+        ("pypistats.org/api/packages/care", FakeResponse(200, {"data": {"last_month": 999999}})),
+    ])
+    facts = PyPIClient(http).fetch_signals(_seed("care", "https://github.com/ohcnetwork/care"))
+    assert facts[0].fetch_status == "not_found"
+    assert facts[0].value is None
+    assert "collision" in facts[0].raw_value
+
+
+def test_pypi_no_repo_on_package_is_unverified_but_kept():
+    # PyPI package lists no repo -> can't verify, but don't drop a legit count.
+    http = FakeHttp([
+        ("pypi.org/pypi/femr/json", FakeResponse(200, {"info": {"project_urls": None, "home_page": None}})),
+        ("pypistats.org/api/packages/femr", FakeResponse(200, _STATS_OK)),
+    ])
+    facts = PyPIClient(http).fetch_signals(_seed("femr", "https://github.com/som-shahlab/femr"))
+    assert facts[0].fetch_status == "ok"
+    assert facts[0].value == "4321"
+    assert "lists no repository" in facts[0].raw_value
+
+
+def test_pypi_entry_without_repo_is_unverified_but_kept():
+    # No entry repo to compare against -> keep the count, mark unverified.
+    http = FakeHttp([
+        ("pypistats.org/api/packages/wfdb", FakeResponse(200, _STATS_OK)),
+    ])
+    facts = PyPIClient(http).fetch_signals(_seed("wfdb", None))
+    assert facts[0].fetch_status == "ok"
+    assert facts[0].value == "4321"
+
+
+def test_pypi_unknown_package_is_not_found():
+    # Metadata 404 (not a real package) -> unverified, then stats 404 -> not_found.
+    http = FakeHttp([])  # every route 404s
+    facts = PyPIClient(http).fetch_signals(_seed("nonexistent-xyz", "https://github.com/a/b"))
+    assert facts[0].fetch_status == "not_found"
